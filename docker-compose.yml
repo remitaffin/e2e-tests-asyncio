@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    command: python -u -m pytest app.py --disable-warnings
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - DB_USERNAME=user
+      - DB_PASSWORD=password
+      - DB_NAME=ordergroove
+      - DB_HOST=mariadb
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: gcr.io/operations-196514/mariadb:base_10.2
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=ordergroove
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - 3306:3306
